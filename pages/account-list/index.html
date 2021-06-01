@@ -6,22 +6,17 @@
   <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
   <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <title>Iserv!</title>
+  <title>Accounts!</title>
 
 </head>
 
 <body>
-  <h1>IServ!</h1>
-  <form id="login-credentials">
-    <input id="email-input" type="text" placeholder="Enter your IServ-Address"></input>
-    <input id="password-input" type="password" placeholder="Enter your password"></input>
-    <input id="addserver" type="submit">Add Server</button>
-  </form>
-
-  <button id="account-list-button">AccountList</button>
+  <h1>Accounts!</h1>
+  <div id="accounts">
+  </div>
+  <button id="add-account">Add Account</button>
   <!-- You can also require other files to run in this process -->
   <script src="./renderer.js"></script>
-
 
 </body>
 

@@ -1,6 +1,9 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, ipcMain} = require('electron')
+const {app, BrowserWindow, ipcMain, Menu, ipcRenderer} = require('electron')
 const path = require('path')
+
+const Store = require('electron-store');
+const store = new Store();
 
 function createWindow () {
   // Create the browser window.
@@ -12,6 +15,7 @@ function createWindow () {
       preload: path.join(__dirname, 'preload.js')
     }
   })
+  
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
@@ -19,12 +23,70 @@ function createWindow () {
   // Open the DevTools.
   ipcMain.on('add-server', (event, args) => {
     console.log("add-server")
+    addServer(args[0], args[1], args[2])
     createIServWindow(args)
+  })
+
+  ipcMain.on('openAccountList', (event, args) => {
+    const accountListWindow = new BrowserWindow({
+      width: 1200,
+      height: 600,
+      webPreferences: {
+        nodeIntegration: true
+      }
+    })
+    
+    accountListWindow.loadFile("./pages/account-list/index.html")
+
+    accountListWindow.webContents.on('did-finish-load', function (event, input) {
+      accountListWindow.webContents.send('load-accounts')
+    })
+  })
+
+  ipcMain.handle('getValue', (event, key) => {
+    return store.get(key);
+  })
+
+  ipcMain.on('setValue', (event, args) => {
+    store.set(args[0], args[1]);
+  })
+
+  ipcMain.on('openIServWindow', (event, address) => {
+    createIServWindow(getIServDataByAddress(address))
   })
 
 }
 
-function createIServWindow(args) {
+function getIServDataByAddress(address) {
+  var accounts = store.get("accounts", "[]")
+  for (let account in accounts) {
+    console.log(account)
+
+    if (account["address"] == address) {
+      return account;
+    }
+  }
+
+}
+
+
+function addServer(serveraddress, username, password) {
+  var accounts = JSON.parse(store.get("accounts", "[]"))
+  accounts.push({
+    "address": serveraddress,
+    "username": username,
+    "password": password
+  })
+
+  store.set("accounts", accounts)
+}
+
+
+/**
+ * 
+ * @param {Array} args 
+ */
+function createIServWindow(account) {
   const iservWindow = new BrowserWindow({
     width: 1200,
     height: 600,
@@ -42,12 +104,12 @@ function createIServWindow(args) {
 
     if (url.includes("/iserv/app/login")) {
       console.log("on iserv" + url);
-      iservWindow.webContents.send('fillCreds', args)
+      iservWindow.webContents.send('fillCreds', account)
     }
 });
 
   
-  iservWindow.loadURL(args[0]);/*.then(() => {
+  iservWindow.loadURL(account["address"]);/*.then(() => {
     console.log("on iserv")
     iservWindow.webContents.send('fillCreds', args)
   });

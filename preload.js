@@ -17,3 +17,7 @@ window.addEventListener('DOMContentLoaded', () => {
 window.addServer = function(val) {
   ipcRenderer.send('add-server', val)
 }
+
+window.openAccountList = function() {
+  ipcRenderer.send('openAccountList')
+}

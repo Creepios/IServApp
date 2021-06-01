@@ -5,15 +5,20 @@
 // selectively enable features needed in the rendering
 // process.
 
-const { ipcRenderer } = require("electron");
+var form = document.querySelector('form[id="login-credentials"]');
+var email = document.querySelector('input[id="email-input"]');
+var password = document.querySelector('input[id="password-input"]');
+var accountlistbutton = document.querySelector('button[id="account-list-button"]');
 
-var button = document.getElementById('addserver');
-var url = document.getElementById('server-input');
-var user = document.getElementById('user-input');
-var password = document.getElementById('password-input');
+form.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    var index = email.value.indexOf('@');
+    var login = email.value.substring(0, index);
+    var domain = "https://" + email.value.substring(index + 1);
 
-button.addEventListener('click', () => {
-    console.log(url.value)
-
-    window.addServer([url.value, user.value, password.value])
+    window.addServer([domain, login, password.value])
 })
+
+accountlistbutton.addEventListener("click", () => {
+    window.openAccountList()
+});

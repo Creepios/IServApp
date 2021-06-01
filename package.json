@@ -17,7 +17,10 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^11.2.3"
+    "electron": "^11.4.7"
   },
-  "dependencies": {}
+  "dependencies": {
+    "electron-store": "^7.0.3",
+    "jquery": "^3.6.0"
+  }
 }

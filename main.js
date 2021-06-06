@@ -58,9 +58,10 @@ function createWindow () {
 }
 
 function getIServDataByAddress(address) {
-  var accounts = store.get("accounts", "[]")
-  for (let account in accounts) {
-    console.log(account)
+  var accounts = store.get("accounts", [])
+  for (let account in accounts.) {
+    console.log("is something happening here?")
+    console.log("account: " + account)
 
     if (account["address"] == address) {
       return account;

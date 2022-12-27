@@ -18,16 +18,16 @@ function createWindow () {
   
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('assets/index.html')
   // mainWindow.loadURL('https://hgw-iserv.de')
   // Open the DevTools.
-  ipcMain.on('add-server', (event, args) => {
+  ipcMain.on('add-server', (args: any) => {
     console.log("add-server")
     addServer(args[0], args[1], args[2])
     createIServWindow(args)
   })
 
-  ipcMain.on('openAccountList', (event, args) => {
+  ipcMain.on('openAccountList', () => {
     const accountListWindow = new BrowserWindow({
       width: 1200,
       height: 600,
@@ -36,34 +36,34 @@ function createWindow () {
       }
     })
     
-    accountListWindow.loadFile("./pages/account-list/index.html")
+    accountListWindow.loadFile("assets/pages/account-list/index.html")
 
-    accountListWindow.webContents.on('did-finish-load', function (event, input) {
+    accountListWindow.webContents.on('did-finish-load', function () {
       accountListWindow.webContents.send('load-accounts')
     })
   })
 
-  ipcMain.handle('getValue', (event, key) => {
+  ipcMain.handle('getValue', (_event: any, key: any) => {
     return store.get(key);
   })
 
-  ipcMain.on('setValue', (event, args) => {
+  ipcMain.on('setValue', (args: any) => {
     store.set(args[0], args[1]);
   })
 
-  ipcMain.on('openIServWindow', (event, address) => {
+  ipcMain.on('openIServWindow', (address: any) => {
     createIServWindow(getIServDataByAddress(address))
   })
 
 }
 
-function getIServDataByAddress(address) {
+function getIServDataByAddress(address: any) {
   var accounts = store.get("accounts", [])
-  for (let account in accounts.) {
+  for (let account in accounts) {
     console.log("is something happening here?")
     console.log("account: " + account)
 
-    if (account["address"] == address) {
+    if (account[0] == address) {
       return account;
     }
   }
@@ -71,7 +71,7 @@ function getIServDataByAddress(address) {
 }
 
 
-function addServer(serveraddress, username, password) {
+function addServer(serveraddress: string, username: string, password: string) {
   var accounts = JSON.parse(store.get("accounts", "[]"))
   accounts.push({
     "address": serveraddress,
@@ -87,18 +87,18 @@ function addServer(serveraddress, username, password) {
  * 
  * @param {Array} args 
  */
-function createIServWindow(account) {
+function createIServWindow(account: any) {
   const iservWindow = new BrowserWindow({
     width: 1200,
     height: 600,
     webPreferences: {
       nodeIntegration: true,
-      preload: path.join(__dirname, 'scripts', 'preload.js')
+      preload: path.join(__dirname, 'assets','scripts', 'preload.js')
     }
   })
 
   iservWindow.webContents.openDevTools();
-  iservWindow.webContents.on('did-finish-load', function (event, input) {
+  iservWindow.webContents.on('did-finish-load', function () {
     var url = iservWindow.webContents.getURL();
     console.log(url);
     // More complex code to handle tokens goes here
@@ -119,8 +119,8 @@ function createIServWindow(account) {
   
 }
 
-ipcMain.on('log', (event, arguments) => {
-  console.log(arguments)
+ipcMain.on('log', (args: any) => {
+  console.log(args)
 })
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

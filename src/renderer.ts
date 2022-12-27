@@ -6,8 +6,8 @@
 // process.
 
 var form = document.querySelector('form[id="login-credentials"]');
-var email = document.querySelector('input[id="email-input"]');
-var password = document.querySelector('input[id="password-input"]');
+var email: any = document.querySelector('input[id="email-input"]');
+var password: any = document.querySelector('input[id="password-input"]');
 var accountlistbutton = document.querySelector('button[id="account-list-button"]');
 
 form.addEventListener('submit', (ev) => {
